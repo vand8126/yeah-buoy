@@ -36,7 +36,7 @@ void loop() {
       // Calculations
         Volts = analogRead(Value) * 5.0/1023 ; // Reads the Analog Input, 5/1023 = 4.9 mV which is the Arduino resolution
         Power = (Volts*Volts)/Ohm; //Uses the P = V^2/R equation to find power
-        Energy += Power; // Takes the power calculation and removes the element of time
+        Energy += Power; // See Appendix 1B 
         Kwh = Energy / 3.6e6; // Turns it from Joules to kilowatt-hours ( 1 Joule = 2.778e-7 kWh) 
       // Printing Results on LCD
         // Voltage
@@ -48,7 +48,7 @@ void loop() {
         // Power
           Serial.println(Power); //Puts the power numbers on the serial plotter
         // Making sure the results are legible
-          delay(500); // delays results by 500 ms
+          delay(1000); // delays results by 500 ms
       // Resets the for Loop
       if (i == 999) {
         i = 0;
@@ -59,7 +59,7 @@ void loop() {
 /*
  Appendix: 
  
-  The circuit:
+  1A The circuit:
  * LCD RS pin to digital pin 7
  * LCD Enable pin to digital pin 8
  * LCD D4 pin to digital pin 9
@@ -72,4 +72,10 @@ void loop() {
  * 10K resistor:
  * ends to +5V and ground
  * wiper to LCD VO pin (pin 3)
+ * 
+ 1B: The Energy calculation
+ * The total energy generated is an estimate that uses the delay in the for loop. 
+ * The power shown is the number of watts, with the energy shown being that wattage generated over a second
+ * That energy, similar to a step-function, increases over time as Joules
+ * It is then turned into kWh for teh function itself
 */
