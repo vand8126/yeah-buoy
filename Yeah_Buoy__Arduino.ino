@@ -19,10 +19,11 @@
 
 // Initializations
 LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
-int Resistance = 10;
-int Voltage = 0;
-int Power;
-int VoltRead; 
+float Ohm = 39;// Resistance of the electric motor is 39 Ohms
+float Value = 0;
+float Power;
+float Power2;
+float Volts; 
 int i; 
 
 void setup() {
@@ -32,13 +33,14 @@ void setup() {
   // Voltage
   lcd.setCursor(0,0);
   lcd.print("Voltage:");
-  lcd.setCursor(11,0);
+  lcd.setCursor(15,0);
   lcd.print("V");
   // Power
   lcd.setCursor(0,1);
   lcd.print("Power:");
-  
-  //Plotter
+  lcd.setCursor(15,1);
+  lcd.print("W");
+   //Plotter
   Serial.begin(9600);
 }
 
@@ -46,19 +48,17 @@ void loop() {
   // (note: line 1 is the second row, since counting begins with 0):
   // Voltage, uses a for loop to constantly update itself
   for(i=0;i<1000;i++) {
-    VoltRead = analogRead(Voltage); // Reads the Analog Input
-    lcd.setCursor(8,0); // Prints VoltRead
-    lcd.print(VoltRead);
-    Serial.println(VoltRead);
+    Volts = analogRead(Value) * 5.0/1023 ; // Reads the Analog Input, 5/1023 = 4.9 mV which is the Arduino resolution
+    Power = (Volts*Volts)/Ohm; //Uses the P = V^2/R equation to find power
+    lcd.setCursor(8,0); // Prints Volts
+    lcd.print(Volts);
+    lcd.setCursor(6,1);
+    lcd.print(Power);
+    Serial.println(Volts);
+    delay(500);
     // Resets the For Loop
     if (i == 999) {
       i = 0;
     }
   } 
-  // Power
-  Power = (VoltRead * VoltRead / Resistance); 
-  lcd.setCursor(6,1);
-  lcd.print(Power);
-  //Serial.println(Power);
- 
 }
